@@ -1,6 +1,7 @@
 name: Deploy & Run DLT Pipeline
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'health_dlt_pipeline.py'
