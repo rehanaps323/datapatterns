@@ -35,6 +35,12 @@ jobs:
           pip install --upgrade databricks-sdk
 
 
+      - name: Print Databricks Environment Variables
+        run: |
+          echo "DATABRICKS_HOST=${{ secrets.DATABRICKS_HOST }}"
+          echo "DATABRICKS_TOKEN=${{ secrets.DATABRICKS_TOKEN }}"
+
+
       - name: Run DLT Pipeline Script
         run: |
           #python health_dlt_pipeline.py
