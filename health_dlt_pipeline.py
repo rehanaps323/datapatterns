@@ -1,32 +1,42 @@
 from databricks.sdk import WorkspaceClient
 from databricks.sdk.service.pipelines import PipelineCluster, NotebookLibrary
 
-# Create the Databricks workspace client
+# Create Databricks workspace client
 w = WorkspaceClient()
 
-# Create the Delta Live Table (DLT) pipeline
-pipeline = w.pipelines.create(
-    name="health_dlt_pipeline",
-    storage="/pipelines/storage/health_dlt_pipeline",
-    target="health_target",
-    edition="ADVANCED",
-    libraries=[
-        NotebookLibrary(path="/Workspace/Users/ashaik0713@gmail.com/health_dlt_pipeline")
-    ],
-    clusters=[
-        PipelineCluster(
-            label="default",
-            num_workers=1
-        )
-    ],
-    configuration={
-        "raw_data_path": "/mnt/raw_data",
-        "target": "development"
-    }
-)
+# Constants
+PIPELINE_NAME = "health_dlt_pipeline"
 
-print(f"✅ Pipeline created with ID: {pipeline.pipeline_id}")
+# Check if the pipeline already exists
+existing = next((p for p in w.pipelines.list() if p.name == PIPELINE_NAME), None)
 
-# Start the pipeline after creation
-w.pipelines.start_by_id(pipeline.pipeline_id)
-print(f"🚀 Pipeline started: {pipeline.pipeline_id}")
+if existing:
+    pipeline_id = existing.pipeline_id
+    print(f"🔁 Pipeline already exists with ID: {pipeline_id}")
+else:
+    # Create the pipeline
+    pipeline = w.pipelines.create(
+        name=PIPELINE_NAME,
+        storage="/pipelines/storage/health_dlt_pipeline",
+        target="health_target",
+        edition="ADVANCED",
+        libraries=[
+            NotebookLibrary(path="/Workspace/Users/ashaik0713@gmail.com/health_dlt_pipeline")
+        ],
+        clusters=[
+            PipelineCluster(
+                label="default",
+                num_workers=1
+            )
+        ],
+        configuration={
+            "raw_data_path": "/mnt/raw_data",
+            "target": "development"
+        }
+    )
+    pipeline_id = pipeline.pipeline_id
+    print(f"✅ Pipeline created with ID: {pipeline_id}")
+
+# Start the pipeline
+w.pipelines.start_by_id(pipeline_id)
+print(f"🚀 Pipeline started: {pipeline_id}")
