@@ -9,7 +9,7 @@ w = WorkspaceClient()
 PIPELINE_NAME = "health_dlt_pipeline"
 
 # List all pipelines
-pipelines = w.pipelines.list()
+pipelines = w.pipelines.list_pipelines()
 
 # Find if the pipeline already exists
 existing = next((p for p in pipelines if p.name == PIPELINE_NAME), None)
