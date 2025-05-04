@@ -1,6 +1,7 @@
 
 from databricks.sdk import WorkspaceClient
-from databricks.sdk.service.pipelines import *
+from databricks.sdk.service.pipelines import AutoScale, PipelineCluster, NotebookLibrary
+
 
 # Create a workspace client using env vars or ~/.databrickscfg
 w = WorkspaceClient()
