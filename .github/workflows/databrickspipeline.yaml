@@ -1,0 +1,34 @@
+name: Deploy & Run DLT Pipeline
+
+on:
+  push:
+    paths:
+      - 'health_dlt_pipeline.py'
+      - '.github/workflows/deploy_dlt_pipeline.yml'
+    branches:
+      - main
+
+jobs:
+  deploy-dlt:
+    runs-on: ubuntu-latest
+
+    env:
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install databricks-sdk databricks-cli
+
+      - name: Run DLT Pipeline Script
+        run: |
+          python health_dlt_pipeline.py
