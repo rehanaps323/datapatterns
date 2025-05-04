@@ -1,5 +1,5 @@
 from databricks.sdk import WorkspaceClient
-from databricks.sdk.service.pipelines import CreatePipeline, PipelineLibrary, PipelineNotebookLibrary
+import json
 
 # Initialize WorkspaceClient
 workspace = WorkspaceClient()
@@ -13,33 +13,40 @@ existing_pipeline = next((p for p in pipelines if p.name == pipeline_name), None
 
 # If the pipeline doesn't exist, create it
 if not existing_pipeline:
-    # Create a notebook library configuration
-    notebook_library = PipelineNotebookLibrary(
-        path="/Workspace/Users/ashaik0713@gmail.com/health_dlt_pipeline"
-    )
-    
-    # Create pipeline
-    created_pipeline = workspace.pipelines.create(
-        name=pipeline_name,
-        development=True,  # Set to False for production
-        clusters=[{
-            "label": "default",
-            "num_workers": 1
-        }],
-        libraries=[PipelineLibrary(notebook=notebook_library)],
-        configuration={
+    # Create pipeline specification as a dictionary that matches the API structure
+    pipeline_spec = {
+        "name": pipeline_name,
+        "development": True,  # Set to False for production
+        "clusters": [
+            {
+                "label": "default",
+                "num_workers": 1
+            }
+        ],
+        "libraries": [
+            {
+                "notebook": {
+                    "path": "/Workspace/Users/ashaik0713@gmail.com/health_dlt_pipeline"
+                }
+            }
+        ],
+        "configuration": {
             "spark.master": "local[*]",
             "spark.databricks.delta.preview.enabled": "true"
         },
-        photon=True,
-        edition="ADVANCED"
-    )
-    print(f"Created pipeline: {created_pipeline.pipeline_id}")
-    pipeline_id = created_pipeline.pipeline_id
+        "photon": True,
+        "edition": "ADVANCED"
+    }
+    
+    # Create pipeline (using the method that works with your SDK version)
+    created_pipeline = workspace.post("pipelines", json=pipeline_spec)
+    pipeline_id = created_pipeline.get("pipeline_id")
+    print(f"Created pipeline: {pipeline_id}")
 else:
-    print(f"Pipeline already exists: {existing_pipeline.pipeline_id}")
     pipeline_id = existing_pipeline.pipeline_id
+    print(f"Pipeline already exists: {pipeline_id}")
 
-# Trigger the pipeline run
-run = workspace.pipelines.start_update(pipeline_id=pipeline_id)
-print(f"Pipeline update started. Update ID: {run.update_id}")
+# Trigger the pipeline run (using the method that works with your SDK version)
+update_response = workspace.post(f"pipelines/{pipeline_id}/updates", json={"full_refresh": True})
+update_id = update_response.get("update_id")
+print(f"Pipeline update started. Update ID: {update_id}")
