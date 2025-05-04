@@ -1,4 +1,6 @@
-import dlt
+from dlt import enable_local_execution
+
+enable_local_execution()
 from pyspark.sql.functions import col, split, current_timestamp, input_file_name, isnan, count
 import json
 import os
