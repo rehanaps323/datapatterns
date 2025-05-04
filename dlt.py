@@ -3,7 +3,7 @@ from pyspark.sql.functions import col, split, current_timestamp, input_file_name
 import json
 import os
 from databricks.sdk import WorkspaceClient
-from databricks.sdk.service.pipelines import PipelineMode
+#from databricks.sdk.service.pipelines import PipelineMode
 
 # ---------------- BRONZE TABLE ---------------- #
 @dlt.table(
