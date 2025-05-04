@@ -40,6 +40,10 @@ else:
     pipeline_id = pipeline.pipeline_id
     print(f"✅ Pipeline created with ID: {pipeline_id}")
 
-# Start the pipeline
-w.pipelines.start_by_id(pipeline_id)
-print(f"🚀 Pipeline started: {pipeline_id}")
+# Start the pipeline run using the appropriate API (runs)
+w.runs.submit_run(
+    run_name="health_dlt_pipeline_run",  # You can set your run name
+    pipeline_id=pipeline_id
+)
+
+print(f"🚀 Pipeline run started for pipeline ID: {pipeline_id}")
