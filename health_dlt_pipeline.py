@@ -1,13 +1,14 @@
 from databricks.sdk import WorkspaceClient
-from databricks.sdk.service.pipelines import CreatePipelineRequest, PipelineCluster, NotebookLibrary
+from databricks.sdk.service.pipelines import PipelineCluster, NotebookLibrary
 
-# Create a Workspace client
+# Create the Databricks workspace client (uses env vars DATABRICKS_HOST and DATABRICKS_TOKEN)
 w = WorkspaceClient()
 
+# Define the Delta Live Table (DLT) pipeline
 pipeline = w.pipelines.create(
-    name="simple_demo_pipeline",
-    storage="/pipelines/storage/simple_demo_pipeline",
-    target="simple_demo_target",
+    name="health_dlt_pipeline",
+    storage="/pipelines/storage/health_dlt_pipeline",  # Must be DBFS or Unity Catalog volume path
+    target="health_target",  # Will create or use this schema
     notebooks=[
         NotebookLibrary(path="/Workspace/Users/ashaik0713@gmail.com/health_dlt_pipeline")
     ],
@@ -15,7 +16,7 @@ pipeline = w.pipelines.create(
     clusters=[
         PipelineCluster(
             label="default",
-            num_workers=1  # Simple cluster config if autoscale isn't exposed
+            num_workers=1  # Minimal cluster
         )
     ],
     configuration={
@@ -24,4 +25,4 @@ pipeline = w.pipelines.create(
     }
 )
 
-print(f"Pipeline created with ID: {pipeline.pipeline_id}")
+print(f"✅ Pipeline created with ID: {pipeline.pipeline_id}")
