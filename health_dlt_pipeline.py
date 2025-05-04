@@ -26,3 +26,7 @@ pipeline = w.pipelines.create(
 )
 
 print(f"✅ Pipeline created with ID: {pipeline.pipeline_id}")
+
+# Start the pipeline after creation
+w.pipelines.start_by_id(pipeline.pipeline_id)
+print(f"🚀 Pipeline started: {pipeline.pipeline_id}")
