@@ -1,6 +1,5 @@
 from databricks.sdk import WorkspaceClient
 from databricks.sdk.service.pipelines import PipelineCluster, NotebookLibrary
-from databricks.sdk.service import pipelines as pipelines_service
 
 # Create Databricks workspace client
 w = WorkspaceClient()
@@ -8,17 +7,17 @@ w = WorkspaceClient()
 # Constants
 PIPELINE_NAME = "health_dlt_pipeline"
 
-# Use the underlying service to list all pipelines
-existing = next(
-    (p for p in pipelines_service.list_pipelines(w.api_client).statuses if p.name == PIPELINE_NAME),
-    None
-)
+# List all pipelines
+pipelines = w.pipelines.list_pipelines()
+
+# Find if the pipeline already exists
+existing = next((p for p in pipelines if p.name == PIPELINE_NAME), None)
 
 if existing:
     pipeline_id = existing.pipeline_id
     print(f"🔁 Pipeline already exists with ID: {pipeline_id}")
 else:
-    # Create the pipeline
+    # Create the pipeline if it doesn't exist
     pipeline = w.pipelines.create(
         name=PIPELINE_NAME,
         storage="/pipelines/storage/health_dlt_pipeline",
