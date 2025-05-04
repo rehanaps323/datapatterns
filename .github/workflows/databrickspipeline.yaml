@@ -6,7 +6,7 @@ on:
       - 'health_dlt_pipeline.py'
       - '.github/workflows/deploy_dlt_pipeline.yml'
     branches:
-      - main
+      - devops
 
 jobs:
   deploy-dlt:
