@@ -1,4 +1,5 @@
 from databricks.sdk import WorkspaceClient
+from databricks.sdk.service.pipelines import CreatePipelineCluster, PipelineLibrary, NotebookLibrary
 
 pipeline_name = "Health Data DLT Pipeline"
 notebook_path = "/Users/ashaik0713@gmail.com/health_dlt_pipeline"
@@ -16,15 +17,19 @@ if not pipeline:
     created_pipeline = workspace.pipelines.create(
         name=pipeline_name,
         development=True,
-        clusters=[{
-            "label": "default",
-            "num_workers": 1
-        }],
-        libraries=[{
-            "notebook": {
-                "path": notebook_path
-            }
-        }],
+        clusters=[
+            CreatePipelineCluster(
+                label="default",
+                num_workers=1
+            )
+        ],
+        libraries=[
+            PipelineLibrary(
+                notebook=NotebookLibrary(
+                    path=notebook_path
+                )
+            )
+        ],
         configuration={
             "spark.master": "local[*]",
             "spark.databricks.delta.preview.enabled": "true"
