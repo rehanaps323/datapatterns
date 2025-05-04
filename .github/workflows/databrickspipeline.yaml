@@ -35,7 +35,7 @@ jobs:
 
       - name: Run DLT Pipeline Script
         run: |
-          #python health_dlt_pipeline.py
-          python dlt.py
+          python health_dlt_pipeline.py
+          #python dlt.py
 
 
