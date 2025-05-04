@@ -1,6 +1,6 @@
 from databricks.sdk import WorkspaceClient
 from databricks.sdk.service.pipelines import CreatePipeline, PipelineCluster, NotebookLibrary
-from databricks.sdk.service.jobs import SubmitRun
+from databricks.sdk.service.jobs import SubmitRunRequest
 
 # Create Databricks workspace client
 w = WorkspaceClient()
@@ -44,8 +44,10 @@ else:
     print(f"✅ Pipeline created with ID: {pipeline_id}")
 
 # Trigger the pipeline run
-run = w.jobs.submit_run(
-    run_name="health_dlt_pipeline_run",
-    pipeline_id=pipeline_id  # For DLT pipelines, use pipeline_id instead of job_id
+run = w.jobs.submit(
+    SubmitRunRequest(
+        run_name="health_dlt_pipeline_run",
+        pipeline_id=pipeline_id  # For DLT pipelines, use pipeline_id instead of job_id
+    )
 )
 print(f"🚀 Pipeline run started for pipeline ID: {pipeline_id}, run ID: {run.run_id}")
