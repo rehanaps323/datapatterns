@@ -5,11 +5,13 @@ notebook_path = "/Users/ashaik0713@gmail.com/health_dlt_pipeline"
 
 workspace = WorkspaceClient()
 
+# Convert generator to list
+pipelines = list(workspace.pipelines.list_pipelines())
+
 # Check if pipeline already exists
-pipelines = workspace.pipelines.list_pipelines().statuses
 pipeline = next((p for p in pipelines if p.name == pipeline_name), None)
 
-# Create pipeline if not exists
+# Create pipeline if it doesn't exist
 if not pipeline:
     created_pipeline = workspace.pipelines.create(
         name=pipeline_name,
