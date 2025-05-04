@@ -32,6 +32,7 @@ jobs:
           pip install databricks-sdk
            pip install pyspark 
            pip install databricks-dlt
+           pip install --upgrade databricks-sdk
 
 
       - name: Run DLT Pipeline Script
