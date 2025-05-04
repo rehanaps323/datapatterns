@@ -1,14 +1,15 @@
 from databricks.sdk import WorkspaceClient
 
 pipeline_name = "Health Data DLT Pipeline"
-#notebook_path = "/Users/your.email@databricks.com/health_dlt_pipeline"
-notebook_path = "/Users/ashaik0713@gmail.com/health_dlt_pipeline"# change to your notebook path
+notebook_path = "/Users/ashaik0713@gmail.com/health_dlt_pipeline"
 
 workspace = WorkspaceClient()
-pipelines = workspace.pipelines.list()
 
+# Check if pipeline already exists
+pipelines = workspace.pipelines.list_pipelines().statuses
 pipeline = next((p for p in pipelines if p.name == pipeline_name), None)
 
+# Create pipeline if not exists
 if not pipeline:
     created_pipeline = workspace.pipelines.create(
         name=pipeline_name,
@@ -35,6 +36,6 @@ else:
     print(f"ℹ️ Pipeline already exists: {pipeline.pipeline_id}")
     pipeline_id = pipeline.pipeline_id
 
-# Trigger the pipeline run
+# Start pipeline run
 run = workspace.pipelines.start(pipeline_id, full_refresh=True)
-print(f"▶️ Pipeline run started: {run.run_id}")
+print(f"▶️ Pipeline run started. Run ID: {run.run_id}")
