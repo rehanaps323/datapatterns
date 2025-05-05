@@ -1,6 +1,8 @@
-from dlt import enable_local_execution
-
+from dlt import table, read, read_stream, expect_all_or_drop, enable_local_execution
 enable_local_execution()
+
+
+
 from pyspark.sql.functions import col, split, current_timestamp, input_file_name, isnan, count
 import json
 import os
@@ -18,7 +20,7 @@ def bronze_patients():
         .option("cloudFiles.format", "csv")
         .option("header", "true")
         .option("inferSchema", "true")
-        .load("/Heart Prediction Quantum Dataset.csv")
+        .load("/Volumes/your_volume_path/Heart Prediction Quantum Dataset.csv")
         .withColumn("_ingest_timestamp", current_timestamp())
         .withColumn("_source_file", input_file_name())
     )
@@ -111,7 +113,7 @@ if not pipeline:
         }],
         libraries=[{
             "notebook": {
-                "path": "/Workspace/Users/ashaik0713@gmail.com/health_dlt_pipeline"
+                "path": "/Users/ashaik0713@gmail.com/health_dlt_pipeline"
             }
         }],
         configuration={
