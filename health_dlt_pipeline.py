@@ -20,7 +20,7 @@ def bronze_patients():
         .option("cloudFiles.format", "csv")
         .option("header", "true")
         .option("inferSchema", "true")
-        .load("/Volumes/your_volume_path/Heart Prediction Quantum Dataset.csv")
+        .load(r"C:\Users\ashai\OneDrive\Desktop\rehanadata\datapatterns\Heart Prediction Quantum Dataset.csv")
         .withColumn("_ingest_timestamp", current_timestamp())
         .withColumn("_source_file", input_file_name())
     )
